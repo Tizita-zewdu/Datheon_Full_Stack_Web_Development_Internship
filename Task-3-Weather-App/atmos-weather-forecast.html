@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173b63"><title>Atmos — Live Weather</title>
+<link rel="stylesheet" href="style.css"
+</head>
+<body><main class="app">
+<header>
+    <div class="brand">
+        <div class="logo">☼</div>
+        <div>
+            <h1>Atmos</h1>
+            <p>Weather, at a glance.</p>
+        </div>
+    </div>
+    <p id="todayDate" class="muted"></p>
+</header>
+<section class="hero" id="hero">
+    <div class="hero-top">
+        <div>
+            <div class="eyebrow">Live weather telemetry</div>
+            <h2>Find your forecast.</h2>
+            <div class="hero-copy">Current conditions and the next five days, wherever you are.</div>
+        </div>
+<form class="search" id="searchForm">
+    <input id="cityInput" aria-label="City name" placeholder="Search any city (e.g. Addis Ababa)" value="Addis Ababa" required>
+    <button type="submit">Search ↗</button>
+</form>
+</div>
+<div class="weather-main">
+    <div>
+        <div class="place" id="placeName">Addis Ababa, Ethiopia</div>
+        <div class="time" id="localTime">Loading current weather…</div>
+        <div class="condition" id="conditionText">Getting conditions…</div>
+    </div>
+    <div class="temp-wrap">
+        <div class="emoji" id="weatherEmoji">🌤️</div>
+        <div>
+            <div class="temp"><span id="temperature">--</span><span class="unit">°C</span></div>
+            <div class="condition" id="feelsLike">Feels like --°C</div>
+        </div>
+    </div>
+</div>
+</section>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<div class="loading" id="loading">
+    <div class="spinner">
+
+    </div>Fetching the latest weather data…</div>
+<section class="metrics">
+<article class="metric">
+    <div class="metric-top">Humidity <span class="metric-icon">💧</span>
+    </div>
+    <div class="metric-value" id="humidity">--%</div>
+    <div class="metric-note">Relative humidity</div>
+</article>
+<article class="metric">
+    <div class="metric-top">Wind speed <span class="metric-icon">🌬️</span></div>
+    <div class="metric-value" id="wind">-- <small>km/h</small></div>
+    <div class="metric-note" id="windDirection">Current wind speed</div>
+</article>
+<article class="metric">
+    <div class="metric-top">Pressure <span class="metric-icon">◉</span></div>
+    <div class="metric-value" id="pressure">-- <small>hPa</small></div>
+    <div class="metric-note">Sea-level pressure</div>
+</article>
+<article class="metric">
+    <div class="metric-top">Visibility <span class="metric-icon">◎</span></div>
+    <div class="metric-value" id="visibility">-- <small>km</small></div>
+    <div class="metric-note">Estimated visibility</div>
+</article>
+</section>
+<section><div class="section-head"><h3>5-day forecast</h3><p>Plan ahead with upcoming daily conditions.</p></div><div class="forecast-wrap"><div class="forecast" id="forecast"></div></div></section>
+<details class="settings"><summary>API settings (optional)</summary><div class="settings-inner"><div><label for="apiKey">OpenWeatherMap API key</label><input id="apiKey" type="password" placeholder="Paste your API key here" autocomplete="off"></div><button id="saveKey" type="button">Use API key</button></div><small>By default, Atmos uses Open-Meteo's public forecast API, which requires no API key. To use OpenWeatherMap instead, enter your own key here. The key is saved only in this browser's localStorage. Do not publish a personal API key in a public repository.</small></details>
+<p class="foot">Weather data via <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · Responsive, live, and API-powered</p>
+</main>
+
+<script>
+(() => {
+"use strict";
+const $=s=>document.querySelector(s), KEY="atmos.openweathermap.key";let requestId=0;
+const codes={0:["Clear sky","☀️","sunny"],1:["Mainly clear","🌤️","sunny"],2:["Partly cloudy","⛅","cloudy"],3:["Overcast","☁️","cloudy"],45:["Fog","🌫️","cloudy"],48:["Rime fog","🌫️","cloudy"],51:["Light drizzle","🌦️","rainy"],53:["Drizzle","🌦️","rainy"],55:["Dense drizzle","🌧️","rainy"],56:["Freezing drizzle","🌧️","rainy"],57:["Heavy freezing drizzle","🌧️","rainy"],61:["Slight rain","🌦️","rainy"],63:["Moderate rain","🌧️","rainy"],65:["Heavy rain","🌧️","rainy"],66:["Freezing rain","🌧️","rainy"],67:["Heavy freezing rain","🌧️","rainy"],71:["Slight snow","🌨️","cloudy"],73:["Moderate snow","🌨️","cloudy"],75:["Heavy snow","❄️","cloudy"],77:["Snow grains","🌨️","cloudy"],80:["Rain showers","🌦️","rainy"],81:["Moderate showers","🌧️","rainy"],82:["Violent showers","⛈️","rainy"],85:["Snow showers","🌨️","cloudy"],86:["Heavy snow showers","❄️","cloudy"],95:["Thunderstorm","⛈️","rainy"],96:["Thunderstorm with hail","⛈️","rainy"],99:["Severe thunderstorm","⛈️","rainy"]};
+const ow={200:["Thunderstorm","⛈️","rainy"],201:["Thunderstorm","⛈️","rainy"],202:["Heavy thunderstorm","⛈️","rainy"],300:["Drizzle","🌦️","rainy"],301:["Drizzle","🌦️","rainy"],302:["Heavy drizzle","🌧️","rainy"],500:["Light rain","🌦️","rainy"],501:["Moderate rain","🌧️","rainy"],502:["Heavy rain","🌧️","rainy"],503:["Very heavy rain","🌧️","rainy"],504:["Extreme rain","🌧️","rainy"],511:["Freezing rain","🌧️","rainy"],520:["Rain showers","🌦️","rainy"],521:["Rain showers","🌧️","rainy"],522:["Heavy showers","🌧️","rainy"],600:["Light snow","🌨️","cloudy"],601:["Snow","🌨️","cloudy"],602:["Heavy snow","❄️","cloudy"],701:["Mist","🌫️","cloudy"],711:["Smoke","🌫️","cloudy"],721:["Haze","🌫️","cloudy"],741:["Fog","🌫️","cloudy"],800:["Clear sky","☀️","sunny"],801:["Few clouds","🌤️","sunny"],802:["Scattered clouds","⛅","cloudy"],803:["Broken clouds","☁️","cloudy"],804:["Overcast clouds","☁️","cloudy"]};
+function status(msg,error=false){$("#status").textContent=msg;$("#status").className="status show"+(error?" error":"")}
+function loading(on){$("#loading").classList.toggle("show",on);$("#searchForm button").disabled=on;$("#searchForm button").textContent=on?"Loading…":"Search ↗"}
+function visual(label,icon,theme){$("#conditionText").textContent=label;$("#weatherEmoji").textContent=icon;$("#hero").className="hero "+theme}
+function dayName(d){return new Date(d+"T12:00:00").toLocaleDateString(undefined,{weekday:"short"})}
+function shortDate(d){return new Date(d+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"})}
+function forecast(days){$("#forecast").innerHTML=days.map((d,i)=>`<article class="day"><div class="day-name">${i===0?"Today":dayName(d.date)}</div><div class="day-date">${shortDate(d.date)}</div><div class="day-icon">${d.icon}</div><div class="day-condition">${d.label}</div><div class="temps"><span>${Math.round(d.high)}°</span><span class="low">${Math.round(d.low)}°</span></div></article>`).join("")}
+function display(d){$("#placeName").textContent=d.place;$("#localTime").textContent=d.time?"Local time · "+d.time:"Latest available conditions";$("#temperature").textContent=Math.round(d.temp);$("#feelsLike").textContent=`Feels like ${Math.round(d.feels)}°C`;$("#humidity").textContent=Math.round(d.humidity)+"%";$("#wind").innerHTML=`${Math.round(d.wind)} <small>km/h</small>`;$("#windDirection").textContent=d.direction==null?"Current wind speed":`Direction ${Math.round(d.direction)}°`;$("#pressure").innerHTML=`${Math.round(d.pressure)} <small>hPa</small>`;$("#visibility").innerHTML=`${d.visibility==null?"—":Number(d.visibility).toFixed(1)} <small>km</small>`;visual(d.label,d.icon,d.theme);forecast(d.forecast)}
+function meteoCode(code,isDay=true){let v=codes[code]||["Unknown conditions","🌡️","cloudy"];if(code===0&&!isDay)return["Clear night","🌙","night"];if([1,2].includes(code)&&!isDay)return["Cloudy night","☁️","night"];return v}
+async function geocode(city){const r=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(city)+"&count=1&language=en&format=json");if(!r.ok)throw Error("Could not reach the city search service. Check your internet connection.");const j=await r.json();if(!j.results?.length)throw Error(`We couldn't find "${city}". Check the spelling and try another city.`);return j.results[0]}
+async function useMeteo(city,id){const loc=await geocode(city),url=`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,pressure_msl,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;const r=await fetch(url);if(!r.ok)throw Error("Weather data is temporarily unavailable. Please try again.");const j=await r.json();if(id!==requestId)return;const c=j.current,v=meteoCode(c.weather_code,!!c.is_day),d=j.daily;display({place:[loc.name,loc.admin1,loc.country].filter((x,i,a)=>x&&a.indexOf(x)===i).join(", "),time:new Date(c.time).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),temp:c.temperature_2m,feels:c.apparent_temperature,humidity:c.relative_humidity_2m,wind:c.wind_speed_10m,direction:c.wind_direction_10m,pressure:c.pressure_msl,visibility:null,label:v[0],icon:v[1],theme:v[2],forecast:d.time.map((date,i)=>{const w=meteoCode(d.weather_code[i]);return{date,high:d.temperature_2m_max[i],low:d.temperature_2m_min[i],label:w[0],icon:w[1]}})})}
+async function useOWM(city,key,id){const base="https://api.openweathermap.org/data/2.5",r=await fetch(`${base}/weather?q=${encodeURIComponent(city)}&appid=${encodeURIComponent(key)}&units=metric`),c=await r.json();if(!r.ok){if(r.status===404)throw Error(`We couldn't find "${city}". Check the spelling and try again.`);if(r.status===401)throw Error("OpenWeatherMap rejected this API key. Check that it is correct and activated.");throw Error(c.message||"Could not retrieve weather data.")}const fr=await fetch(`${base}/forecast?q=${encodeURIComponent(city)}&appid=${encodeURIComponent(key)}&units=metric`),fj=await fr.json();if(!fr.ok)throw Error(fj.message||"Could not retrieve the forecast.");if(id!==requestId)return;let v=ow[c.weather[0].id]||["Current conditions","🌡️","cloudy"];if(c.weather[0].icon.endsWith("n")&&[800,801,802].includes(c.weather[0].id))v=["Clear night","🌙","night"];const grouped={};fj.list.forEach(x=>{const date=x.dt_txt.slice(0,10);(grouped[date]??=[]).push(x)});const days=Object.entries(grouped).slice(0,5).map(([date,items])=>{const noon=items.reduce((a,b)=>Math.abs(+a.dt_txt.slice(11,13)-12)<Math.abs(+b.dt_txt.slice(11,13)-12)?a:b);const temps=items.map(x=>x.main.temp),w=ow[noon.weather[0].id]||["Conditions","🌡️","cloudy"];return{date,high:Math.max(...temps),low:Math.min(...temps),label:w[0],icon:w[1]}});display({place:[c.name,c.sys?.country].filter(Boolean).join(", "),time:new Date((Date.now()/1000+(c.timezone||0))*1000).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",timeZone:"UTC"}),temp:c.main.temp,feels:c.main.feels_like,humidity:c.main.humidity,wind:c.wind.speed*3.6,direction:c.wind.deg,pressure:c.main.pressure,visibility:c.visibility==null?null:c.visibility/1000,label:v[0],icon:v[1],theme:v[2],forecast:days})}
+async function search(city){if(!city.trim()){status("Enter a city name to search.",true);return}const id=++requestId;$("#status").className="status";loading(true);try{const key=localStorage.getItem(KEY)||"";if(key.trim())await useOWM(city.trim(),key.trim(),id);else await useMeteo(city.trim(),id);if(id===requestId)$("#status").className="status"}catch(e){if(id===requestId)status(e.message||"Something went wrong. Please try again.",true)}finally{if(id===requestId)loading(false)}}
+$("#searchForm").addEventListener("submit",e=>{e.preventDefault();search($("#cityInput").value)});$("#saveKey").addEventListener("click",()=>{const k=$("#apiKey").value.trim();if(k)localStorage.setItem(KEY,k);else localStorage.removeItem(KEY);status(k?"Using OpenWeatherMap API key…":"API key removed; using Open-Meteo.");search($("#cityInput").value)});$("#apiKey").value=localStorage.getItem(KEY)||"";$("#todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});search("Addis Ababa");
+})();
+</script></body></html>
