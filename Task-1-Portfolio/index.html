@@ -1,0 +1,640 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tizita Zewdu's developer portfolio showcasing web development, software projects, and technical skills.">
+  <meta name="theme-color" content="#0b1020">
+  <title>Tizita Zewdu | Developer Portfolio</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+  <header>
+    <nav class="container" aria-label="Main navigation">
+      <a class="logo" href="#home" aria-label="Tizita Zewdu home">
+        Tizu<span class="accent">.dev</span>
+      </a>
+
+      <div class="nav-right">
+        <div class="nav-links" id="navLinks">
+          <a href="#about">About</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Education</a>
+          <a href="#resume">Resume</a>
+          <a href="#certifications">Certifications</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <button class="icon-btn" id="themeToggle"
+          aria-label="Switch to light theme" title="Toggle theme">
+          ☀
+        </button>
+
+        <button class="icon-btn menu-btn" id="menuToggle"
+          aria-label="Open navigation menu"
+          aria-expanded="false" aria-controls="navLinks">
+          ☰
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="eyebrow">Information Systems · Software Development</div>
+        <h1>Building digital experiences that <span class="accent">solve real problems.</span></h1>
+        <p>
+          I'm Tizita Zewdu, an Information Systems student at Addis Ababa
+          University with an interest in web development and practical
+          software solutions. I enjoy turning ideas into useful digital products.
+        </p>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="#projects">Explore my work ↗</a>
+          <a class="btn btn-secondary" href="#contact">Get in touch</a>
+        </div>
+
+        <div class="actions">
+          <a class="text-link muted"
+             href="https://github.com/Tizita-zewdu"
+             target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a class="text-link muted"
+             href="https://linkedin.com/in/tizita-zewdu-9930a8347"
+             target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">A little about me</div>
+          <h2>Curious mind. <span class="accent">Practical builder.</span></h2>
+        </div>
+
+        <div class="about-grid">
+          <article class="card">
+            <h3>Who I am</h3>
+            <p>
+              I’m an Information Systems student at Addis Ababa University, 
+              passionate Full-Stack Developer and  about building reliable, scalable, and user-friendly digital solutions. 
+              I work across frontend and backend development, creating responsive user interfaces, developing server-side applications 
+              and REST APIs, and integrating databases to deliver complete software solutions. 
+              Through hands-on projects, I continue to strengthen my skills in software engineering, problem-solving, 
+              and modern web technologies.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>What I enjoy</h3>
+            <p>
+             I enjoy creating intuitive user interfaces, building backend functionality, 
+             connecting applications through APIs, working with databases, 
+             and exploring new technologies to turn ideas into practical solutions.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">My toolkit</div>
+          <h2>Technical <span class="accent">skills</span></h2>
+          <p class="section-intro">
+            Technologies and development areas I've worked with.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill">HTML5</div>
+          <div class="skill">CSS3</div>
+          <div class="skill">JavaScript</div>
+          <div class="skill">React</div>
+          <div class="skill">Node.js</div>
+          <div class="skill">Java</div>
+          <div class="skill">REST APIs</div>
+          <div class="skill">Git & GitHub</div>
+          <div class="skill">TypeScript</div>
+          <div class="skill">PostgreSQL</div>
+          <div class="skill">Frontend Development</div>
+          <div class="skill">API Integration</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Selected work</div>
+          <h2>Projects I've <span class="accent">worked on</span></h2>
+          <p class="section-intro">
+            Practical projects involving application interfaces, system
+            monitoring, and interactive web experiences.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <article class="card project-card">
+            <div class="project-icon" aria-hidden="true">▦</div>
+            <h3>Procurement Tracking System</h3>
+            <p>
+             A procurement workflow application for managing procurement operations. 
+             My contributions included backend API endpoint development, API integration, 
+             and integration testing to ensure reliable communication between application components.
+            </p>
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">REST APIs</span>
+            </div>
+            <button class="btn btn-secondary project-open"
+              data-project="procurement">View details ↗</button>
+          </article>
+
+          <article class="card project-card">
+            <div class="project-icon" aria-hidden="true">⌁</div>
+            <h3>Server Monitoring System</h3>
+            <p>
+              A system monitoring project focused on collecting server health
+              information and communicating monitoring data to a backend.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">Monitoring</span>
+              <span class="tag">APIs</span>
+            </div>
+            <button class="btn btn-secondary project-open"
+              data-project="monitoring">View details ↗</button>
+          </article>
+
+          <article class="card project-card">
+            <div class="project-icon" aria-hidden="true">♡</div>
+            <h3>Interactive Birthday Website</h3>
+            <p>
+              A personalized interactive website featuring animated
+              experiences, a letter, a photo gallery, music, and video.
+            </p>
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">Vite</span>
+              <span class="tag">CSS</span>
+            </div>
+          
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">My journey</div>
+          <h2>Education & <span class="accent">experience</span></h2>
+        </div>
+
+        <div class="card timeline">
+          <article class="timeline-item">
+            <h3>BSc studies in Information Systems</h3>
+            <p class="muted">
+              Addis Ababa University · Expected graduation: 2027
+            </p>
+            <p>
+              Developing knowledge in information systems, software
+              development, and digital solutions.
+            </p>
+          </article>
+
+          <article class="timeline-item">
+            <h3>BSc studies in Accounting and Finance</h3>
+            <p class="muted">
+              Alpha University College · Expected graduation: 2029
+            </p>
+            <p>
+              Studying accounting principles, financial management, and business operations.
+            </p>
+          </article>
+
+          <article class="timeline-item">
+            <h3>Development internship</h3>
+            <p class="muted">Ministry of Agriculture · 2026</p>
+            <p>
+              Backend development for a procurement tracking application,
+              including support for API integration.
+            </p>
+            <p class="muted">Innovation and technology development bureaue · 2026</p>
+            <p>
+              Frontend development for Automated backup and server monitoring system,
+              including support for agent development and backend API integration.
+            </p>
+          </article>
+
+          <article class="timeline-item">
+            <h3>Administration & Social Media Volunteer</h3>
+            <p class="muted">HOPE worldwide Ethiopia · July 2025 – January 2026</p>
+            <p>
+              Supported administrative activities and social media management. 
+              Helped organize the 2025 charity walk and supported participants throughout the event.
+            </p>
+          </article>
+
+          <article class="timeline-item">
+            <h3>Full-Stack Developer Intern</h3>
+            <p class="muted">Datheon · 2026</p>
+            <p>
+             Developing practical software projects across frontend and backend technologies, 
+             including application interfaces, API development, integration, and testing.
+            </p>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+
+<!-- Resume Section -->
+<section id="resume">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">My qualifications</div>
+      <h2>Resume &amp; <span class="accent">credentials</span></h2>
+      <p class="section-intro">
+        Explore my educational background, technical skills,
+        projects, and professional experience.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <article class="card">
+        <div class="project-icon" aria-hidden="true">📄</div>
+        <h3>My Resume</h3>
+        <p>
+          My resume highlights my Information Systems studies,
+          full-stack development skills, practical software
+          projects, and relevant experience.
+        </p>
+
+        <div class="actions">
+          <a
+            class="btn btn-primary"
+            href="assets/tizita-zewdu-cv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Resume ↗
+          </a>
+
+          <a
+            class="btn btn-secondary"
+            href="assets/tizita-zewdu-cv.pdf"
+            download
+          >
+            Download CV ↓
+          </a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="project-icon" aria-hidden="true">🎓</div>
+        <h3>Professional Development</h3>
+        <p>
+          I continuously develop my technical knowledge through
+          practical projects, professional learning, and
+          relevant training in software development and technology.
+        </p>
+        <a class="text-link" href="#certifications">
+          Explore my certificates ↓
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Certifications Section -->
+<section id="certifications">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Learning &amp; achievements</div>
+      <h2>My <span class="accent">certifications</span></h2>
+      <p class="section-intro">
+        Certifications and training that support my continuous
+        learning and professional development.
+      </p>
+    </div>
+
+    <div class="project-grid">
+      <!-- Certificate 1 -->
+      <article class="card project-card">
+        <div class="project-icon" aria-hidden="true">🏅</div>
+        <h3>Cybersecurity Certificate</h3>
+        <p>
+          Certificate related to cybersecurity and security
+          fundamentals.
+        </p>
+        <div class="tags">
+          <span class="tag">Cybersecurity</span>
+          <span class="tag">Professional Learning</span>
+        </div>
+        <a
+          class="btn btn-secondary"
+          href="assets/certificates/cybersecurity-certificate.jpg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Certificate ↗
+        </a>
+      </article>
+      <article class="card project-card">
+        <div class="project-icon" aria-hidden="true">🏅</div>
+        <h3>cybersecurity-fundamintals</h3>
+        <p>
+          Certificate related to cybersecurity and security
+          fundamentals.
+        </p>
+        <div class="tags">
+          <span class="tag">Cybersecurity</span>
+          <span class="tag">Professional Learning</span>
+        </div>
+        <a
+          class="btn btn-secondary"
+          href="assets/certificates/cybersecurity-fundamintals.jpg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Certificate ↗
+        </a>
+      </article>
+      
+      <article class="card project-card">
+        <div class="project-icon" aria-hidden="true">🏅</div>
+        <h3>project-management</h3>
+        <p>
+          Certificate related to project management and leadership.
+        </p>
+        <div class="tags">
+          <span class="tag">Project Management</span>
+          <span class="tag">Professional Learning</span>
+        </div>
+        <a
+          class="btn btn-secondary"
+          href="assets/certificates/project-management.jpg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Certificate ↗
+        </a>
+      </article>
+
+      <article class="card project-card">
+        <div class="project-icon" aria-hidden="true">🏅</div>
+        <h3>Certificate of Service</h3>
+        <p>
+          Certificate of service.
+        </p>
+        <div class="tags">
+          <span class="tag">Certificate of Service</span>
+          <span class="tag">Professional Learning</span>
+        </div>
+        <a
+          class="btn btn-secondary"
+          href="assets/certificates/certificate-of-service.jpg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Certificate ↗
+        </a>
+      </article>
+
+      <!-- Add another card for each certificate you have earned -->
+    </div>
+  </div>
+</section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="card contact-card">
+          <div class="eyebrow">Let's connect</div>
+          <h2>Have a project or <span class="accent">opportunity?</span></h2>
+          <p>
+            I'm interested in learning, collaborating, and exploring
+            opportunities to grow as a developer. Feel free to reach out.
+          </p>
+          <div class="actions" style="justify-content:center">
+            <a class="btn btn-primary"
+              href="mailto:tizetazewdu@gmail.com">Email me ↗</a>
+            <a class="btn btn-secondary"
+              href="https://linkedin.com/in/tizita-zewdu-9930a8347"
+              target="_blank" rel="noopener noreferrer">Connect on LinkedIn ↗</a>
+            <a class="btn btn-secondary"
+              href="https://github.com/Tizita-zewdu"
+              target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Tizita Zewdu</span>
+      <span>Designed and built with care.</span>
+    </div>
+  </footer>
+
+  <dialog id="projectModal" aria-labelledby="modalTitle">
+    <div style="display:flex;justify-content:space-between;gap:15px">
+      <h2 id="modalTitle">Project details</h2>
+      <button class="icon-btn" id="modalClose" aria-label="Close dialog">✕</button>
+    </div>
+    <p id="modalDescription"></p>
+    <div class="tags" id="modalTags"></div>
+    <div class="modal-actions">
+      <a id="modalLink" class="btn btn-primary" hidden
+        target="_blank" rel="noopener noreferrer">Open project ↗</a>
+      <button class="btn btn-secondary" id="modalDone">Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById("themeToggle");
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+    const modal = document.getElementById("projectModal");
+
+    // Theme preference
+    const savedTheme = localStorage.getItem("tizu-theme");
+    if (savedTheme === "light") body.classList.add("light");
+
+    function updateThemeButton() {
+      const isLight = body.classList.contains("light");
+      themeToggle.textContent = isLight ? "☾" : "☀";
+      themeToggle.setAttribute(
+        "aria-label",
+        isLight ? "Switch to dark theme" : "Switch to light theme"
+      );
+    }
+
+    updateThemeButton();
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("light");
+      const theme = body.classList.contains("light") ? "light" : "dark";
+      localStorage.setItem("tizu-theme", theme);
+      updateThemeButton();
+    });
+
+    // Mobile navigation
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+      );
+      menuToggle.textContent = isOpen ? "✕" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open navigation menu");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    // Project modal content
+    
+const projects = {
+  procurement: {
+    title: "Procurement Tracking System",
+
+    description: `
+      <h3>Project Overview</h3>
+      <p>
+        A procurement workflow application developed for the
+        Ministry of Agriculture to manage procurement-related
+        information and support processes such as project planning,
+        activities, contracts, payments, and supplier management.
+      </p>
+
+      <h3>My Contribution</h3>
+      <p>
+        Contributed to backend development by implementing API
+        endpoints, integrating APIs with application workflows,
+        and performing integration testing to verify that different
+        components communicated and functioned correctly.
+      </p>
+
+      <h3>Key Responsibilities</h3>
+      <ul>
+        <li>Developed and maintained backend API endpoints.</li>
+        <li>Integrated APIs with application functionality.</li>
+        <li>
+          Performed integration testing to validate API requests,
+          responses, and interactions between components.
+        </li>
+        <li>
+          Debugged issues and helped improve backend reliability.
+        </li>
+      </ul>
+
+      <h3>Technologies</h3>
+      <p>
+        Node.js, TypeScript, Express.js, REST APIs,
+        Prisma ORM, and PostgreSQL.
+      </p>
+    `,
+
+    tags: [
+      "Node.js",
+      "TypeScript",
+      "Express.js",
+      "REST APIs",
+      "Prisma ORM",
+      "PostgreSQL"
+    ],
+
+    url: ""
+  },
+
+  monitoring: {
+    title: "Server Monitoring System",
+
+    description: `
+      <h3>Project Overview</h3>
+      <p>
+        A server monitoring solution designed to collect system
+        health information and communicate monitoring data to
+        a backend for tracking and review.
+      </p>
+
+      <h3>My Contribution</h3>
+      <p>
+        Worked on the frontend interface for presenting server
+        monitoring information using React and TypeScript.
+      </p>
+
+      <h3>Technologies</h3>
+      <p>React, TypeScript, and HTTP APIs.</p>
+    `,
+
+    tags: ["React", "TypeScript","HTTP APIs"],
+
+    url: ""
+  }
+};
+
+    function closeModal() {
+      modal.close();
+    }
+
+    document.querySelectorAll(".project-open").forEach(button => {
+      button.addEventListener("click", () => {
+        const project = projects[button.dataset.project];
+        document.getElementById("modalTitle").textContent = project.title;
+        document.getElementById("modalDescription").innerHTML =
+          project.description;
+
+        const tags = document.getElementById("modalTags");
+        tags.replaceChildren();
+
+        project.tags.forEach(label => {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = label;
+          tags.appendChild(tag);
+        });
+
+        const link = document.getElementById("modalLink");
+        link.hidden = !project.url;
+        if (project.url) link.href = project.url;
+
+        modal.showModal();
+      });
+    });
+
+    document.getElementById("modalClose").addEventListener("click", closeModal);
+    document.getElementById("modalDone").addEventListener("click", closeModal);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal.open) closeModal();
+    });
+  </script>
+</body>
+</html>
