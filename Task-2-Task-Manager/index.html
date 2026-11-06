@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Taskflow — Productivity Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.2 4.2L19.5 6.5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><h1>Taskflow</h1><p>Your space to get things done</p></div>
+      </div>
+      <div class="date-label" id="todayLabel"></div>
+    </header>
+
+    <section class="hero">
+      <div><p class="eyebrow">Your productivity space</p><h2>Make today count<span style="color:var(--accent)">.</span></h2><p class="sub">Small steps every day lead to big results.</p></div>
+      <button class="primary" id="addTaskTop">＋ &nbsp; Add a new task</button>
+    </section>
+
+    <section class="stats" aria-label="Task statistics">
+      <div class="stat"><div class="stat-top">Total tasks <span class="stat-icon">▤</span></div><div class="stat-number" id="totalStat">0</div><div class="stat-note">Everything on your list</div></div>
+      <div class="stat"><div class="stat-top">Completed <span class="stat-icon" style="background:var(--green-soft);color:var(--green)">✓</span></div><div class="stat-number" id="completedStat">0</div><div class="stat-note" id="completedNote">Tasks finished</div></div>
+      <div class="stat"><div class="stat-top">In progress <span class="stat-icon" style="background:#fff2df;color:#cf8426">◷</span></div><div class="stat-number" id="activeStat">0</div><div class="stat-note">Still to do</div></div>
+      <div class="stat"><div class="stat-top">Overdue <span class="stat-icon" style="background:var(--red-soft);color:var(--red)">!</span></div><div class="stat-number" id="overdueStat">0</div><div class="stat-note">Need your attention</div></div>
+    </section>
+
+    <main class="workspace">
+      <section class="panel">
+        <div class="panel-head"><div class="panel-head-row"><div><h3>My tasks</h3><p>Keep your priorities clear and moving.</p></div><span class="count-pill" id="listCount">0 TASKS</span></div></div>
+        <div class="toolbar">
+          <div class="search-wrap"><span aria-hidden="true">⌕</span><input class="search" id="searchInput" type="search" placeholder="Search your tasks..." aria-label="Search tasks"></div>
+          <div class="filters" role="group" aria-label="Filter tasks">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+          </div>
+        </div>
+        <div class="task-list" id="taskList" aria-live="polite"></div>
+      </section>
+
+      <aside class="side">
+        <section class="panel side-panel">
+          <h3>Your progress</h3><p class="desc">Every completed task is a win.</p>
+          <div class="progress-row"><span>Completion rate</span><strong id="progressPercent">0%</strong></div>
+          <div class="progress-track" role="progressbar" aria-label="Task completion rate" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+          <div style="height:21px"></div>
+          <h3 style="font-size:13px">Tasks by category</h3>
+          <div id="categoryBreakdown"></div>
+        </section>
+        <section class="tip">
+          <div class="tip-icon">✦</div><h3>A little focus goes a long way</h3>
+          <p>Choose one important task, give it your attention, and start there. Progress beats perfection.</p>
+        </section>
+        <p class="storage-note"><span>● Saved automatically</span><br>Your tasks stay in this browser using localStorage. No account or server required.</p>
+      </aside>
+    </main>
+    <footer>Made for focus, built for progress · Taskflow</footer>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head"><h3 id="modalTitle">Create a task</h3><button class="close" type="button" id="closeModal" aria-label="Close dialog">×</button></div>
+      <form id="taskForm">
+        <div class="field"><label for="taskTitle">Task title *</label><input id="taskTitle" name="title" maxlength="120" placeholder="e.g. Finish project proposal" required></div>
+        <div class="field"><label for="taskDescription">Description (optional)</label><input id="taskDescription" name="description" maxlength="240" placeholder="Add a few details..."></div>
+        <div class="form-grid">
+          <div class="field"><label for="taskCategory">Category</label><select id="taskCategory" name="category"><option>Work</option><option>Personal</option><option>Study</option></select></div>
+          <div class="field"><label for="taskDue">Due date (optional)</label><input id="taskDue" name="dueDate" type="date"></div>
+        </div>
+        <div class="form-actions"><button class="secondary" type="button" id="cancelModal">Cancel</button><button class="primary" type="submit" id="saveTaskBtn">Save task</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+      const STORAGE_KEY = "taskflow.tasks.v1";
+      const $ = (selector) => document.querySelector(selector);
+      const taskList = $("#taskList");
+      const backdrop = $("#modalBackdrop");
+      const form = $("#taskForm");
+      let tasks = loadTasks();
+      let currentFilter = "all";
+      let searchTerm = "";
+      let editingId = null;
+      let toastTimer;
+
+      function loadTasks() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (!saved) return [];
+          const parsed = JSON.parse(saved);
+          return Array.isArray(parsed) ? parsed.filter(t => t && typeof t.id === "string" && typeof t.title === "string") : [];
+        } catch (error) {
+          console.warn("Taskflow could not read saved tasks:", error);
+          return [];
+        }
+      }
+      function saveTasks() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+          return true;
+        } catch (error) {
+          console.error("Taskflow could not save tasks:", error);
+          showToast("Could not save. Check your browser storage settings.");
+          return false;
+        }
+      }
+      function escapeHTML(value = "") {
+        return String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[char]));
+      }
+      function dateLabel(dateString) {
+        if (!dateString) return "";
+        const date = new Date(dateString + "T00:00:00");
+        return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString(undefined, { month:"short", day:"numeric", year:"numeric" });
+      }
+      function isOverdue(task) {
+        if (!task.dueDate || task.completed) return false;
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        return new Date(task.dueDate + "T00:00:00") < today;
+      }
+      function makeId() {
+        return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
+      }
+      function showToast(message) {
+        const toast = $("#toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+      }
+      function openModal(task = null) {
+        editingId = task ? task.id : null;
+        $("#modalTitle").textContent = task ? "Edit task" : "Create a task";
+        $("#saveTaskBtn").textContent = task ? "Save changes" : "Save task";
+        $("#taskTitle").value = task ? task.title : "";
+        $("#taskDescription").value = task ? (task.description || "") : "";
+        $("#taskCategory").value = task ? task.category : "Work";
+        $("#taskDue").value = task ? (task.dueDate || "") : "";
+        backdrop.classList.add("open");
+        document.body.style.overflow = "hidden";
+        setTimeout(() => $("#taskTitle").focus(), 40);
+      }
+      function closeModal() {
+        backdrop.classList.remove("open");
+        document.body.style.overflow = "";
+        form.reset();
+        editingId = null;
+      }
+      function getVisibleTasks() {
+        return tasks.filter(task => {
+          const filterMatch = currentFilter === "all" || (currentFilter === "active" && !task.completed) || (currentFilter === "completed" && task.completed);
+          const text = `${task.title} ${task.description || ""} ${task.category}`.toLowerCase();
+          return filterMatch && text.includes(searchTerm);
+        }).sort((a,b) => {
+          if (a.completed !== b.completed) return Number(a.completed) - Number(b.completed);
+          if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate) || (b.createdAt || 0) - (a.createdAt || 0);
+          if (a.dueDate) return -1;
+          if (b.dueDate) return 1;
+          return (b.createdAt || 0) - (a.createdAt || 0);
+        });
+      }
+      function renderTasks() {
+        const visible = getVisibleTasks();
+        $("#listCount").textContent = `${visible.length} ${visible.length === 1 ? "TASK" : "TASKS"}`;
+        if (!visible.length) {
+          const noTasks = tasks.length === 0;
+          taskList.innerHTML = `<div class="empty"><div class="empty-icon">${noTasks ? "✦" : "⌕"}</div><h4>${noTasks ? "Your list starts here" : "No tasks found"}</h4><p>${noTasks ? "Add your first task and turn your plans into progress." : "Try a different search or filter to find what you need."}</p>${noTasks ? '<button class="text-btn" id="emptyAdd">＋ Create your first task</button>' : '<button class="text-btn" id="clearSearch">Clear search and filters</button>'}</div>`;
+          $("#emptyAdd")?.addEventListener("click", () => openModal());
+          $("#clearSearch")?.addEventListener("click", () => { searchTerm = ""; $("#searchInput").value = ""; setFilter("all"); renderTasks(); });
+          return;
+        }
+        taskList.innerHTML = visible.map(task => {
+          const due = dateLabel(task.dueDate);
+          const overdue = isOverdue(task);
+          return `<article class="task ${task.completed ? "completed" : ""}" data-id="${escapeHTML(task.id)}">
+            <input class="check" type="checkbox" aria-label="Mark ${escapeHTML(task.title)} as ${task.completed ? "active" : "completed"}" ${task.completed ? "checked" : ""} data-action="toggle">
+            <div class="task-main">
+              <div class="task-title">${escapeHTML(task.title)}</div>
+              ${task.description ? `<div class="task-desc">${escapeHTML(task.description)}</div>` : ""}
+              <div class="task-meta"><span class="tag ${escapeHTML(task.category)}">${escapeHTML(task.category)}</span>${due ? `<span class="due ${overdue ? "overdue" : ""}">${overdue ? "⚠ Overdue · " : "◷ Due "}${escapeHTML(due)}</span>` : ""}</div>
+            </div>
+            <div class="task-actions">
+              <button class="icon-btn" type="button" data-action="edit" aria-label="Edit ${escapeHTML(task.title)}" title="Edit">✎</button>
+              <button class="icon-btn delete" type="button" data-action="delete" aria-label="Delete ${escapeHTML(task.title)}" title="Delete">⌫</button>
+            </div>
+          </article>`;
+        }).join("");
+      }
+      function renderStats() {
+        const total = tasks.length;
+        const completed = tasks.filter(t => t.completed).length;
+        const active = total - completed;
+        const overdue = tasks.filter(isOverdue).length;
+        const percent = total ? Math.round(completed / total * 100) : 0;
+        $("#totalStat").textContent = total;
+        $("#completedStat").textContent = completed;
+        $("#activeStat").textContent = active;
+        $("#overdueStat").textContent = overdue;
+        $("#completedNote").textContent = total ? `${percent}% of all tasks` : "Tasks finished";
+        $("#progressPercent").textContent = `${percent}%`;
+        $("#progressFill").style.width = `${percent}%`;
+        $("#progressBar").setAttribute("aria-valuenow", String(percent));
+        const counts = { Work:0, Personal:0, Study:0 };
+        tasks.forEach(t => { if (counts[t.category] !== undefined) counts[t.category]++; });
+        const colors = { Work:"#6575f5", Personal:"#e88c54", Study:"#28a77a" };
+        $("#categoryBreakdown").innerHTML = Object.entries(counts).map(([name,count]) => `<div class="category-row"><span class="category-dot" style="background:${colors[name]}"></span><span class="name">${name}</span><span class="amount">${count}</span></div>`).join("");
+      }
+      function render() { renderTasks(); renderStats(); }
+      function setFilter(filter) {
+        currentFilter = filter;
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+          const active = btn.dataset.filter === filter;
+          btn.classList.toggle("active", active);
+          btn.setAttribute("aria-pressed", String(active));
+        });
+      }
+      function addOrUpdateTask(event) {
+        event.preventDefault();
+        const title = $("#taskTitle").value.trim();
+        if (!title) { $("#taskTitle").focus(); return; }
+        const data = {
+          title,
+          description: $("#taskDescription").value.trim(),
+          category: $("#taskCategory").value,
+          dueDate: $("#taskDue").value
+        };
+        if (editingId) {
+          const index = tasks.findIndex(t => t.id === editingId);
+          if (index !== -1) tasks[index] = { ...tasks[index], ...data, updatedAt: Date.now() };
+          saveTasks();
+          render();
+          closeModal();
+          showToast("Task updated successfully");
+        } else {
+          tasks.unshift({ id:makeId(), ...data, completed:false, createdAt:Date.now() });
+          saveTasks();
+          render();
+          closeModal();
+          showToast("Task added to your list");
+        }
+      }
+      taskList.addEventListener("click", event => {
+        const button = event.target.closest("[data-action]");
+        if (!button) return;
+        const article = button.closest("[data-id]");
+        const task = tasks.find(t => t.id === article?.dataset.id);
+        if (!task) return;
+        const action = button.dataset.action;
+        if (action === "edit") openModal(task);
+        if (action === "delete") {
+          if (!confirm(`Delete "${task.title}"? This cannot be undone.`)) return;
+          tasks = tasks.filter(t => t.id !== task.id);
+          saveTasks(); render(); showToast("Task deleted");
+        }
+      });
+      taskList.addEventListener("change", event => {
+        if (!event.target.matches('[data-action="toggle"]')) return;
+        const article = event.target.closest("[data-id]");
+        const task = tasks.find(t => t.id === article?.dataset.id);
+        if (!task) return;
+        task.completed = event.target.checked;
+        task.completedAt = task.completed ? Date.now() : null;
+        saveTasks(); render();
+        showToast(task.completed ? "Nice work — task completed!" : "Task marked as active");
+      });
+      document.querySelectorAll(".filter-btn").forEach(btn => btn.addEventListener("click", () => { setFilter(btn.dataset.filter); renderTasks(); }));
+      $("#searchInput").addEventListener("input", event => { searchTerm = event.target.value.trim().toLowerCase(); renderTasks(); });
+      $("#addTaskTop").addEventListener("click", () => openModal());
+      $("#closeModal").addEventListener("click", closeModal);
+      $("#cancelModal").addEventListener("click", closeModal);
+      backdrop.addEventListener("click", event => { if (event.target === backdrop) closeModal(); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape" && backdrop.classList.contains("open")) closeModal(); });
+      form.addEventListener("submit", addOrUpdateTask);
+      $("#todayLabel").textContent = new Date().toLocaleDateString(undefined, { weekday:"long", month:"long", day:"numeric", year:"numeric" });
+      setFilter("all");
+      render();
+    })();
+  </script>
+</body>
+</html>
